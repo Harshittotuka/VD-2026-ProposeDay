@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Love Proposal ❤️</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', cursive;
+        }
+
+        /* Background */
+        .bg_heart {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://i.pinimg.com/originals/51/d8/37/51d8374126446d495348b6032202126f.jpg");
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+        }
+
+        .bg_heart::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Text */
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 850px;
+            text-align: center;
+            color: white;
+        }
+
+        #text {
+            font-size: 30px;
+            line-height: 1.6;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Hearts */
+        .heart {
+            position: fixed;
+            top: -10px;
+            transform: rotate(-45deg);
+            animation: fall linear forwards;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -50%;
+        }
+
+        .heart:after {
+            right: -50%;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(-45deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg_heart"></div>
+
+    <div class="container">
+        <h2 id="text"></h2>
+    </div>
+
+    <script>
+
+        /* floating hearts */
+        setInterval(() => {
+
+            const heart = document.createElement("div");
+
+            let size = Math.random() * 25 + 10;
+
+            heart.className = "heart";
+            heart.style.width = size + "px";
+            heart.style.height = size + "px";
+            heart.style.left = Math.random() * 100 + "%";
+            heart.style.background = `rgba(255,${Math.random() * 120 + 120},${Math.random() * 120 + 120},1)`;
+            heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 8000);
+
+        }, 300);
+
+
+
+        /* TEXTS */
+
+        const intro = `Hi SweetHeart.....!
+
+    Now I want to say something special to you.
+
+    So please read everything carefully...
+    Automciatc`;
+
+        const loveText = `When I saw you for the first time,
+you seemed something very special to me.
+
+As the days went by,
+you came closer to my heart.
+
+I don’t know the reason why,
+but your thoughts always echo inside my mind.
+
+Everything about you is deeply interesting to me.
+
+I might have said these words to someone before…
+but I promise —
+I will never say these words to anyone other than you now.
+
+I love my parents more than anything else in this world…
+and now,
+you are the only person whom I love just as deeply.
+
+I Love You SweetHeart ❤️
+
+And today…
+
+I want to say this from the deepest part of my heart —
+
+I love you babu.
+
+And to confirm it…
+
+I want to hear this from you,
+very loud and very clear.
+
+So please…
+
+just once…
+
+can you scream for me —
+
+"I LOVE YOU HARSHIT!" ❤️`;
+
+
+        const loveParagraphs = loveText.split(/\n\s*\n/);
+        const loveAudio = new Audio("Ranjha%20%20Flute%20Cover%20%20Instrumental%20%20Divyansh%20Shrivatava%20%20Shershaah%20%20SidharthKiara%20%20B%20Praak.mp3");
+        loveAudio.loop = true;
+
+        let i = 0;
+        let currentText = intro;
+        let speed = 40;
+        let paragraphIndex = 0;
+        let isTyping = false;
+
+        /* type intro automatically */
+        typeWriter();
+
+        function typeWriter() {
+
+            isTyping = true;
+            if (i < currentText.length) {
+
+                let char = currentText.charAt(i);
+
+                if (char === "\n") {
+                    document.getElementById("text").innerHTML += "<br>";
+                } else {
+                    document.getElementById("text").innerHTML += char;
+                }
+
+                i++;
+                setTimeout(typeWriter, speed);
+
+            } else {
+                isTyping = false;
+            }
+        }
+
+
+        function startParagraph() {
+            const textEl = document.getElementById("text");
+            if (textEl.innerHTML.trim().length > 0) {
+                textEl.innerHTML += "<br><br>";
+            }
+            currentText = loveParagraphs[paragraphIndex] || "";
+            i = 0;
+            typeWriter();
+        }
+
+        /* click -> remove old -> type new */
+        function nextText() {
+            if (isTyping) return;
+
+            if (currentText === intro) {
+                paragraphIndex = 0;
+                document.getElementById("text").innerHTML = "";
+                loveAudio.play().catch(() => {});
+                startParagraph();
+                return;
+            }
+
+            paragraphIndex += 1;
+
+            if (paragraphIndex < loveParagraphs.length) {
+                startParagraph();
+            }
+        }
+
+        document.addEventListener("click", () => {
+            nextText();
+        });
+
+    </script>
+
+</body>
+
+</html>
