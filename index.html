@@ -10,70 +10,11 @@
         body {
             margin: 0;
             height: 100%;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             font-family: 'Segoe UI', cursive;
         }
 
-        .gate {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.95) 60%), #000;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            z-index: 999;
-            letter-spacing: 1.5px;
-            font-size: 22px;
-            padding: 24px;
-        }
-
-        .gate .frame {
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 28px 36px;
-            border-radius: 14px;
-            background: rgba(0, 0, 0, 0.35);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08), inset 0 0 30px rgba(0, 0, 0, 0.6);
-        }
-
-        .gate .title {
-            text-transform: uppercase;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
-            letter-spacing: 3px;
-        }
-
-        .gate .message {
-            font-size: 22px;
-            font-weight: 600;
-            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
-        }
-
-        .ellipsis span {
-            opacity: 0.2;
-            animation: dotPulse 1.2s infinite;
-        }
-
-        .ellipsis span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .ellipsis span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes dotPulse {
-            0%, 100% {
-                opacity: 0.2;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(-2px);
-            }
-        }
 
         /* Background */
         .bg_heart {
@@ -112,6 +53,22 @@
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
         }
 
+        .date-badge {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.9);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            text-transform: uppercase;
+        }
+
         /* Hearts */
         .heart {
             position: fixed;
@@ -148,13 +105,6 @@
 
 <body>
 
-    <div id="gate" class="gate">
-        <div class="frame">
-            <div class="title">Midnight Ritual</div>
-            <div class="message">Something magical is loading<span class="ellipsis"><span>.</span><span>.</span><span>.</span></span></div>
-        </div>
-    </div>
-
     <div id="app">
         <div class="bg_heart"></div>
 
@@ -163,10 +113,11 @@
         </div>
     </div>
 
+    <div class="date-badge">💝 08/02/2026 💝</div>
+
     <script>
 
         const app = document.getElementById("app");
-        const gate = document.getElementById("gate");
         let heartsIntervalId = null;
 
         function startHearts() {
@@ -198,8 +149,7 @@
 
     Now I want to say something special to you.
 
-    So please read everything carefully...
-    Automciatc`;
+    So please read everything carefully...`;
 
         const loveText = `When I saw you for the first time,
 you seemed something very special to me.
@@ -252,32 +202,12 @@ can you scream for me —
         let paragraphIndex = 0;
         let isTyping = false;
 
-        function msUntilNextMidnight() {
-            const now = new Date();
-            const next = new Date(now);
-            next.setHours(24, 0, 0, 0);
-            return next - now;
-        }
-
         function unlockSite() {
-            gate.style.display = "none";
-            app.style.visibility = "visible";
             startHearts();
             typeWriter();
         }
 
-        function isWithinLockWindow(date) {
-            return date.getHours() === 23;
-        }
-
-        const now = new Date();
-        if (isWithinLockWindow(now)) {
-            const waitMs = msUntilNextMidnight();
-            app.style.visibility = "hidden";
-            setTimeout(unlockSite, waitMs);
-        } else {
-            unlockSite();
-        }
+        unlockSite();
 
         function typeWriter() {
 
