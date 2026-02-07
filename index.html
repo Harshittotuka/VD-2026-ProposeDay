@@ -14,6 +14,67 @@
             font-family: 'Segoe UI', cursive;
         }
 
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.95) 60%), #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 999;
+            letter-spacing: 1.5px;
+            font-size: 22px;
+            padding: 24px;
+        }
+
+        .gate .frame {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 28px 36px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.35);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08), inset 0 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .gate .title {
+            text-transform: uppercase;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .gate .message {
+            font-size: 22px;
+            font-weight: 600;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+        }
+
+        .ellipsis span {
+            opacity: 0.2;
+            animation: dotPulse 1.2s infinite;
+        }
+
+        .ellipsis span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .ellipsis span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% {
+                opacity: 0.2;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-2px);
+            }
+        }
+
         /* Background */
         .bg_heart {
             position: fixed;
@@ -87,33 +148,47 @@
 
 <body>
 
-    <div class="bg_heart"></div>
+    <div id="gate" class="gate">
+        <div class="frame">
+            <div class="title">Midnight Ritual</div>
+            <div class="message">Something magical is loading<span class="ellipsis"><span>.</span><span>.</span><span>.</span></span></div>
+        </div>
+    </div>
 
-    <div class="container">
-        <h2 id="text"></h2>
+    <div id="app">
+        <div class="bg_heart"></div>
+
+        <div class="container">
+            <h2 id="text"></h2>
+        </div>
     </div>
 
     <script>
 
-        /* floating hearts */
-        setInterval(() => {
+        const app = document.getElementById("app");
+        const gate = document.getElementById("gate");
+        let heartsIntervalId = null;
 
-            const heart = document.createElement("div");
+        function startHearts() {
+            heartsIntervalId = setInterval(() => {
 
-            let size = Math.random() * 25 + 10;
+                const heart = document.createElement("div");
 
-            heart.className = "heart";
-            heart.style.width = size + "px";
-            heart.style.height = size + "px";
-            heart.style.left = Math.random() * 100 + "%";
-            heart.style.background = `rgba(255,${Math.random() * 120 + 120},${Math.random() * 120 + 120},1)`;
-            heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                let size = Math.random() * 25 + 10;
 
-            document.body.appendChild(heart);
+                heart.className = "heart";
+                heart.style.width = size + "px";
+                heart.style.height = size + "px";
+                heart.style.left = Math.random() * 100 + "%";
+                heart.style.background = `rgba(255,${Math.random() * 120 + 120},${Math.random() * 120 + 120},1)`;
+                heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
 
-            setTimeout(() => heart.remove(), 8000);
+                document.body.appendChild(heart);
 
-        }, 300);
+                setTimeout(() => heart.remove(), 8000);
+
+            }, 300);
+        }
 
 
 
@@ -177,8 +252,32 @@ can you scream for me —
         let paragraphIndex = 0;
         let isTyping = false;
 
-        /* type intro automatically */
-        typeWriter();
+        function msUntilNextMidnight() {
+            const now = new Date();
+            const next = new Date(now);
+            next.setHours(24, 0, 0, 0);
+            return next - now;
+        }
+
+        function unlockSite() {
+            gate.style.display = "none";
+            app.style.visibility = "visible";
+            startHearts();
+            typeWriter();
+        }
+
+        function isWithinLockWindow(date) {
+            return date.getHours() === 23;
+        }
+
+        const now = new Date();
+        if (isWithinLockWindow(now)) {
+            const waitMs = msUntilNextMidnight();
+            app.style.visibility = "hidden";
+            setTimeout(unlockSite, waitMs);
+        } else {
+            unlockSite();
+        }
 
         function typeWriter() {
 
